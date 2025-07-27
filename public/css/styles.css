@@ -1,0 +1,221 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+    animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+h1 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 2.5em;
+    font-weight: 300;
+}
+
+.subtitle {
+    text-align: center;
+    color: #7f8c8d;
+    margin-bottom: 40px;
+    font-size: 1.1em;
+}
+
+.status-bar {
+    background: linear-gradient(45deg, #4CAF50, #45a049);
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    text-align: center;
+    font-weight: 500;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+.status-bar.error {
+    background: linear-gradient(45deg, #f44336, #d32f2f);
+    box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);
+}
+
+.create-folder-section {
+    background: #f8f9fa;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    border: 2px solid #e9ecef;
+}
+
+.form-group {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #2c3e50;
+    min-width: 120px;
+}
+
+.form-group input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.btn {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.folders-section {
+    background: #fff;
+    border-radius: 15px;
+    padding: 30px;
+    border: 2px solid #e9ecef;
+}
+
+.folders-section h3 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    font-weight: 400;
+}
+
+.folders-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.folder-card {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.folder-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(240, 147, 251, 0.4);
+}
+
+.folder-card::before {
+    content: "📁";
+    font-size: 2em;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.folder-name {
+    font-weight: 600;
+    font-size: 1.1em;
+}
+
+.folder-date {
+    font-size: 0.9em;
+    opacity: 0.8;
+    margin-top: 5px;
+}
+
+.empty-state {
+    text-align: center;
+    color: #7f8c8d;
+    font-style: italic;
+    padding: 40px;
+}
+
+.loading {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.api-info {
+    background: #e8f4f8;
+    border-left: 4px solid #17a2b8;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 0 8px 8px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+}

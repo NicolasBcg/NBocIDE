@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python IDE - Step 1</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐍</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <h1>🐍 Python IDE</h1>
+            <p class="subtitle">Step 1: Workspace Folder Management</p>
+        </header>
+        
+        <!-- Status Bar -->
+        <div id="statusBar" class="status-bar">
+            <span class="loading"></span>
+            Connecting to server...
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Create Folder Section -->
+            <section class="create-folder-section">
+                <h2>Create New Project Folder</h2>
+                <form class="folder-form" onsubmit="createFolder(event)">
+                    <div class="form-group">
+                        <label for="folderName">Folder Name:</label>
+                        <div class="input-group">
+                            <input 
+                                type="text" 
+                                id="folderName" 
+                                name="folderName"
+                                placeholder="Enter project name (e.g., my-python-project)"
+                                maxlength="50"
+                                required
+                                autocomplete="off"
+                            >
+                            <button type="submit" id="createBtn" class="btn btn-primary">
+                                <span class="btn-text">Create Folder</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Folders Display Section -->
+            <section class="folders-section">
+                <div class="section-header">
+                    <h2>Workspace Folders</h2>
+                    <div class="section-actions">
+                        <button class="btn btn-secondary" onclick="loadFolders()" title="Refresh folder list">
+                            <span class="btn-icon">🔄</span>
+                            <span class="btn-text">Refresh</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="foldersContainer" class="folders-grid">
+                    <div class="empty-state">
+                        <span class="loading"></span>
+                        Loading folders...
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer/Info Section -->
+        <footer class="footer">
+            <div class="api-info">
+                <h3>Available API Endpoints</h3>
+                <div class="endpoints-grid">
+                    <div class="endpoint">
+                        <code class="method get">GET</code>
+                        <code class="path">/api/health</code>
+                        <span class="description">Server health check</span>
+                    </div>
+                    <div class="endpoint">
+                        <code class="method get">GET</code>
+                        <code class="path">/api/folders</code>
+                        <span class="description">List all folders</span>
+                    </div>
+                    <div class="endpoint">
+                        <code class="method post">POST</code>
+                        <code class="path">/api/folders</code>
+                        <span class="description">Create new folder</span>
+                    </div>
+                    <div class="endpoint">
+                        <code class="method get">GET</code>
+                        <code class="path">/api/folders/:name</code>
+                        <span class="description">Get folder details</span>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+</body>
+</html>
