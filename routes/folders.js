@@ -42,6 +42,250 @@ const validateFolderName = (name) => {
     return { valid: true, sanitized };
 };
 
+// Function to create Python project structure
+const createPythonProjectStructure = async (folderPath, projectName) => {
+    try {
+        // Create subdirectories
+        const subdirs = ['data', 'logs', 'test', 'src'];
+        for (const subdir of subdirs) {
+            await fs.mkdir(path.join(folderPath, subdir), { recursive: true });
+        }
+
+        // Create README.md
+        const readmeContent = `# ${projectName.charAt(0).toUpperCase() + projectName.slice(1).replace(/-/g, ' ')}
+
+## Description
+A Python project for ${projectName.replace(/-/g, ' ')}.
+
+## Installation
+
+1. Clone this repository
+2. Install dependencies:
+   \`\`\`bash
+   pip install -r requirements.txt
+   \`\`\`
+
+## Usage
+
+Describe how to use your project here.
+
+## Project Structure
+
+\`\`\`
+${projectName}/
+├── data/          # Data files (ignored by git)
+├── logs/          # Log files (ignored by git)
+├── test/          # Test files
+├── README.md      # This file
+├── requirements.txt # Python dependencies
+├── LICENSE        # License file
+└── .gitignore     # Git ignore rules
+\`\`\`
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+`;
+
+        await fs.writeFile(path.join(folderPath, 'README.md'), readmeContent);
+
+        // Create LICENSE (MIT License)
+        const currentYear = new Date().getFullYear();
+        const licenseContent = `MIT License
+
+Copyright (c) ${currentYear} ${projectName}
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+`;
+
+        await fs.writeFile(path.join(folderPath, 'LICENSE'), licenseContent);
+
+        // Create requirements.txt
+        const requirementsContent = `# Core dependencies
+numpy>=1.21.0
+pandas>=1.3.0
+matplotlib>=3.4.0
+
+# Development dependencies
+pytest>=6.2.0
+black>=21.0.0
+flake8>=3.9.0
+
+# Add your project-specific dependencies here
+`;
+
+        await fs.writeFile(path.join(folderPath, 'requirements.txt'), requirementsContent);
+
+        // Create .gitignore
+        const gitignoreContent = `# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# Project-specific ignores
+data/
+logs/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+`;
+
+        await fs.writeFile(path.join(folderPath, '.gitignore'), gitignoreContent);
+        console.log(`✅ Created Python project structure for: ${projectName}`);
+        
+    } catch (error) {
+        console.error('Error creating Python project structure:', error);
+        throw error;
+    }
+};
+
 // GET /api/folders - List all folders in workspace
 router.get('/', async (req, res) => {
     try {
@@ -96,7 +340,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// POST /api/folders - Create a new folder
+// POST /api/folders - Create a new folder with Python project structure
 router.post('/', async (req, res) => {
     try {
         const { name } = req.body;
@@ -128,6 +372,9 @@ router.post('/', async (req, res) => {
         // Create the folder
         await fs.mkdir(folderPath, { recursive: true });
         
+        // Create Python project structure
+        await createPythonProjectStructure(folderPath, sanitizedName);
+        
         // Get folder stats for response
         const stats = await fs.stat(folderPath);
         
@@ -139,19 +386,19 @@ router.post('/', async (req, res) => {
             size: stats.size
         };
         
-        console.log(`✅ Created folder: ${sanitizedName}`);
+        console.log(`✅ Created Python project: ${sanitizedName}`);
         
         res.status(201).json({
             success: true,
-            message: `Folder "${sanitizedName}" created successfully`,
+            message: `Python project "${sanitizedName}" created successfully with full project structure`,
             folder: newFolder
         });
         
     } catch (error) {
-        console.error('Error creating folder:', error);
+        console.error('Error creating Python project:', error);
         res.status(500).json({
             success: false,
-            error: 'Failed to create folder',
+            error: 'Failed to create Python project',
             details: process.env.NODE_ENV === 'development' ? error.message : undefined
         });
     }
@@ -239,11 +486,11 @@ router.delete('/:folderName', async (req, res) => {
         // Delete the folder recursively
         await fs.rm(folderPath, { recursive: true, force: true });
         
-        console.log(`🗑️ Deleted folder: ${folderName}`);
+        console.log(`🗑️ Deleted Python project: ${folderName}`);
         
         res.json({
             success: true,
-            message: `Folder "${folderName}" deleted successfully`
+            message: `Python project "${folderName}" deleted successfully`
         });
         
     } catch (error) {

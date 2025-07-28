@@ -12,7 +12,7 @@
         <!-- Header Section -->
         <header class="header">
             <h1>🐍 Python IDE</h1>
-            <p class="subtitle">Step 1: Workspace Folder Management</p>
+            <p class="subtitle">Projects :</p>
         </header>
         
         <!-- Status Bar -->
@@ -25,7 +25,7 @@
         <main class="main-content">
             <!-- Create Folder Section -->
             <section class="create-folder-section">
-                <h2>Create New Project Folder</h2>
+                <h2>Create New Python project Project Folder</h2>
                 <form class="folder-form" onsubmit="createFolder(event)">
                     <div class="form-group">
                         <label for="folderName">Folder Name:</label>
@@ -40,7 +40,7 @@
                                 autocomplete="off"
                             >
                             <button type="submit" id="createBtn" class="btn btn-primary">
-                                <span class="btn-text">Create Folder</span>
+                                <span class="btn-text">Create Python Project</span>
                             </button>
                         </div>
                     </div>
@@ -50,7 +50,7 @@
             <!-- Folders Display Section -->
             <section class="folders-section">
                 <div class="section-header">
-                    <h2>Workspace Folders</h2>
+                    <h2>Project Folders</h2>
                     <div class="section-actions">
                         <button class="btn btn-secondary" onclick="loadFolders()" title="Refresh folder list">
                             <span class="btn-icon">🔄</span>
@@ -69,15 +69,10 @@
         </main>
 
         <!-- Footer/Info Section -->
-        <footer class="footer">
+        <!-- <footer class="footer">
             <div class="api-info">
                 <h3>Available API Endpoints</h3>
                 <div class="endpoints-grid">
-                    <div class="endpoint">
-                        <code class="method get">GET</code>
-                        <code class="path">/api/health</code>
-                        <span class="description">Server health check</span>
-                    </div>
                     <div class="endpoint">
                         <code class="method get">GET</code>
                         <code class="path">/api/folders</code>
@@ -95,7 +90,7 @@
                     </div>
                 </div>
             </div>
-        </footer>
+        </footer> -->
     </div>
 
     <!-- Scripts -->

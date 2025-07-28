@@ -7,6 +7,7 @@ const fs = require('fs').promises;
 // Import route modules
 const folderRoutes = require('./routes/folders');
 const healthRoutes = require('./routes/health');
+const projectRoutes = require('./routes/project');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -44,6 +45,7 @@ async function initializeWorkspace() {
 // API Routes
 app.use('/api/folders', folderRoutes);
 app.use('/api/health', healthRoutes);
+app.use('/api/project', projectRoutes);
 
 // Default route - serve main frontend
 app.get('/', (req, res) => {

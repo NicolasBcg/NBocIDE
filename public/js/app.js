@@ -91,7 +91,7 @@ async function createFolder(event) {
     
     const folderName = folderNameInput.value.trim();
     if (!folderName) {
-        showNotification('Please enter a folder name', 'error');
+        // showNotification('Please enter a folder name', 'error');
         return;
     }
     
@@ -135,7 +135,7 @@ async function createFolder(event) {
         }
     } catch (error) {
         console.error('Error creating folder:', error);
-        showNotification('❌ Failed to create folder: ' + error.message, 'error');
+        // showNotification('❌ Failed to create folder: ' + error.message, 'error');
         updateStatus('❌ Failed to create folder', 'error');
     } finally {
         setFormDisabled(false);
@@ -157,14 +157,14 @@ async function deleteFolder(folderName) {
         const data = await response.json();
         
         if (data.success) {
-            showNotification(`🗑️ Folder "${folderName}" deleted successfully`, 'success');
+            // showNotification(`🗑️ Folder "${folderName}" deleted successfully`, 'success');
             await loadFolders(); // Reload the folder list
         } else {
             throw new Error(data.error || 'Failed to delete folder');
         }
     } catch (error) {
         console.error('Error deleting folder:', error);
-        showNotification('❌ Failed to delete folder: ' + error.message, 'error');
+        // showNotification('❌ Failed to delete folder: ' + error.message, 'error');
         updateStatus('❌ Failed to delete folder', 'error');
     }
 }
@@ -177,21 +177,15 @@ async function openFolder(folderName) {
         const data = await response.json();
         
         if (data.success) {
-            showNotification(`📂 Opened folder "${folderName}"`, 'success');
+            // showNotification(`📂 Opened folder "${folderName}"`, 'success');
             updateStatus(`📂 Viewing folder: ${folderName}`, 'success');
             
-            // Here you would typically navigate to the file editor view
-            // For now, just log the folder contents
-            console.log('Folder contents:', data.folder.contents);
-            
-            // Show folder details in a modal or navigate to editor
-            showFolderDetails(data.folder);
         } else {
             throw new Error(data.error || 'Failed to open folder');
         }
     } catch (error) {
         console.error('Error opening folder:', error);
-        showNotification('❌ Failed to open folder: ' + error.message, 'error');
+        // showNotification('❌ Failed to open folder: ' + error.message, 'error');
         updateStatus('❌ Failed to open folder', 'error');
     }
 }
@@ -235,9 +229,6 @@ function renderFolders(folderList) {
                     <button class="btn btn-primary btn-sm" onclick="openFolder('${escapeHtml(folder.name)}')" title="Open folder">
                         <span class="btn-icon">📂</span>
                         <span class="btn-text">Open</span>
-                    </button>
-                    <button class="btn btn-secondary btn-sm" onclick="showFolderInfo('${escapeHtml(folder.name)}')" title="Folder info">
-                        <span class="btn-icon">ℹ️</span>
                     </button>
                     <button class="btn btn-danger btn-sm" onclick="deleteFolder('${escapeHtml(folder.name)}')" title="Delete folder">
                         <span class="btn-icon">🗑️</span>
@@ -357,106 +348,39 @@ function setupKeyboardShortcuts() {
 // NOTIFICATIONS & MODALS
 // ============================================================================
 
-function showNotification(message, type = 'info') {
-    // Remove existing notifications
-    const existingNotifications = document.querySelectorAll('.notification');
-    existingNotifications.forEach(n => n.remove());
+// function showNotification(message, type = 'info') {
+//     // Remove existing notifications
+//     const existingNotifications = document.querySelectorAll('.notification');
+//     existingNotifications.forEach(n => n.remove());
     
-    // Create notification element
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.innerHTML = `
-        <div class="notification-content">
-            <span class="notification-message">${escapeHtml(message)}</span>
-            <button class="notification-close" onclick="this.parentElement.parentElement.remove()">×</button>
-        </div>
-    `;
+//     // Create notification element
+//     const notification = document.createElement('div');
+//     notification.className = `notification ${type}`;
+//     notification.innerHTML = `
+//         <div class="notification-content">
+//             <span class="notification-message">${escapeHtml(message)}</span>
+//             <button class="notification-close" onclick="this.parentElement.parentElement.remove()">×</button>
+//         </div>
+//     `;
     
-    // Add to page
-    document.body.appendChild(notification);
+//     // Add to page
+//     document.body.appendChild(notification);
     
-    // Auto-remove after 5 seconds
-    setTimeout(() => {
-        if (notification.parentElement) {
-            notification.remove();
-        }
-    }, 5000);
+//     // Auto-remove after 5 seconds
+//     setTimeout(() => {
+//         if (notification.parentElement) {
+//             notification.remove();
+//         }
+//     }, 5000);
     
-    // Animate in
-    setTimeout(() => notification.classList.add('show'), 10);
-}
+//     // Animate in
+//     setTimeout(() => notification.classList.add('show'), 10);
+// }
 
-function showFolderDetails(folder) {
-    const modal = document.createElement('div');
-    modal.className = 'modal-overlay';
-    modal.innerHTML = `
-        <div class="modal">
-            <div class="modal-header">
-                <h2>📁 ${escapeHtml(folder.name)}</h2>
-                <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">×</button>
-            </div>
-            <div class="modal-body">
-                <div class="folder-details">
-                    <div class="detail-row">
-                        <strong>Path:</strong> <code>${escapeHtml(folder.path)}</code>
-                    </div>
-                    <div class="detail-row">
-                        <strong>Created:</strong> ${new Date(folder.created).toLocaleString()}
-                    </div>
-                    <div class="detail-row">
-                        <strong>Modified:</strong> ${new Date(folder.modified).toLocaleString()}
-                    </div>
-                    <div class="detail-row">
-                        <strong>Contents:</strong> ${folder.contents.length} items
-                    </div>
-                </div>
-                
-                ${folder.contents.length > 0 ? `
-                    <div class="folder-contents">
-                        <h3>Contents:</h3>
-                        <ul class="contents-list">
-                            ${folder.contents.map(item => `
-                                <li class="content-item ${item.type}">
-                                    <span class="item-icon">${item.type === 'folder' ? '📁' : '📄'}</span>
-                                    <span class="item-name">${escapeHtml(item.name)}</span>
-                                </li>
-                            `).join('')}
-                        </ul>
-                    </div>
-                ` : '<p class="empty-folder">This folder is empty</p>'}
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" onclick="openFolder('${escapeHtml(folder.name)}'); this.closest('.modal-overlay').remove();">
-                    <span class="btn-icon">📂</span>
-                    <span class="btn-text">Open Folder</span>
-                </button>
-                <button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">Close</button>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(modal);
-    
-    // Close modal on outside click
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            modal.remove();
-        }
-    });
-    
-    // Close modal on Escape key
-    const handleEscape = function(e) {
-        if (e.key === 'Escape') {
-            modal.remove();
-            document.removeEventListener('keydown', handleEscape);
-        }
-    };
-    document.addEventListener('keydown', handleEscape);
-}
 
-function showFolderInfo(folderName) {
-    openFolder(folderName);
-}
+// function showFolderInfo(folderName) {
+//     openFolder(folderName);
+// }
 
 // ============================================================================
 // UTILITY FUNCTIONS
@@ -506,5 +430,5 @@ function debounce(func, wait) {
 window.createFolder = createFolder;
 window.loadFolders = loadFolders;
 window.deleteFolder = deleteFolder;
-window.openFolder = openFolder;
+// window.openFolder = openFolder;
 window.showFolderInfo = showFolderInfo;
