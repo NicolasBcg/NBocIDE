@@ -1,4 +1,4 @@
-// public/js/app.js - Frontend JavaScript for Python IDE
+// public/js/app.js - Frontend JavaScript for Python IDE Landing Page
 
 // Global state
 let folders = [];
@@ -64,9 +64,7 @@ async function loadFolders() {
     if (isLoading) return;
     
     try {
-        isLoading = true;
-        showLoadingState();
-        
+        isLoading = true;        
         const response = await fetch('/api/folders');
         const data = await response.json();
         
@@ -79,7 +77,6 @@ async function loadFolders() {
         }
     } catch (error) {
         console.error('Error loading folders:', error);
-        showErrorState('Failed to load folders: ' + error.message);
         updateStatus('❌ Failed to load folders', 'error');
     } finally {
         isLoading = false;
@@ -91,7 +88,6 @@ async function createFolder(event) {
     
     const folderName = folderNameInput.value.trim();
     if (!folderName) {
-        // showNotification('Please enter a folder name', 'error');
         return;
     }
     
@@ -114,12 +110,9 @@ async function createFolder(event) {
             // Clear form
             folderNameInput.value = '';
             
-            // Show success message
-            showNotification(`✅ Folder "${data.folder.name}" created successfully!`, 'success');
-            
             // Reload folders to show the new one
             await loadFolders();
-            
+            updateStatus('✅ Folder created successfully!', 'Success');
             // Focus on the newly created folder
             setTimeout(() => {
                 const newFolderCard = document.querySelector(`[data-folder-name="${data.folder.name}"]`);
@@ -135,7 +128,6 @@ async function createFolder(event) {
         }
     } catch (error) {
         console.error('Error creating folder:', error);
-        // showNotification('❌ Failed to create folder: ' + error.message, 'error');
         updateStatus('❌ Failed to create folder', 'error');
     } finally {
         setFormDisabled(false);
@@ -157,36 +149,28 @@ async function deleteFolder(folderName) {
         const data = await response.json();
         
         if (data.success) {
-            // showNotification(`🗑️ Folder "${folderName}" deleted successfully`, 'success');
             await loadFolders(); // Reload the folder list
+            updateStatus(`✅ Folder "${folderName}" deleted`, 'success');
         } else {
             throw new Error(data.error || 'Failed to delete folder');
         }
     } catch (error) {
         console.error('Error deleting folder:', error);
-        // showNotification('❌ Failed to delete folder: ' + error.message, 'error');
         updateStatus('❌ Failed to delete folder', 'error');
     }
 }
 
-async function openFolder(folderName) {
+// Navigate to project page
+function openFolder(folderName) {
     try {
-        updateStatus(`Opening folder "${folderName}"...`, 'loading');
+        updateStatus(`Opening project "${folderName}"...`, 'loading');
         
-        const response = await fetch(`/api/folders/${encodeURIComponent(folderName)}`);
-        const data = await response.json();
+        // Navigate to project page with the folder name as parameter
+        window.location.href = `/project.html?project=${encodeURIComponent(folderName)}`;
         
-        if (data.success) {
-            // showNotification(`📂 Opened folder "${folderName}"`, 'success');
-            updateStatus(`📂 Viewing folder: ${folderName}`, 'success');
-            
-        } else {
-            throw new Error(data.error || 'Failed to open folder');
-        }
     } catch (error) {
         console.error('Error opening folder:', error);
-        // showNotification('❌ Failed to open folder: ' + error.message, 'error');
-        updateStatus('❌ Failed to open folder', 'error');
+        updateStatus('❌ Failed to open project', 'error');
     }
 }
 
@@ -226,7 +210,7 @@ function renderFolders(folderList) {
                 </div>
                 
                 <div class="folder-actions">
-                    <button class="btn btn-primary btn-sm" onclick="openFolder('${escapeHtml(folder.name)}')" title="Open folder">
+                    <button class="btn btn-primary btn-sm" onclick="openFolder('${escapeHtml(folder.name)}')" title="Open project">
                         <span class="btn-icon">📂</span>
                         <span class="btn-text">Open</span>
                     </button>
@@ -239,33 +223,6 @@ function renderFolders(folderList) {
     }).join('');
     
     foldersContainer.innerHTML = foldersHtml;
-}
-
-function showLoadingState() {
-    if (!foldersContainer) return;
-    
-    foldersContainer.innerHTML = `
-        <div class="loading-state">
-            <span class="loading"></span>
-            <p>Loading folders...</p>
-        </div>
-    `;
-}
-
-function showErrorState(message) {
-    if (!foldersContainer) return;
-    
-    foldersContainer.innerHTML = `
-        <div class="error-state">
-            <span class="error-icon">❌</span>
-            <h3>Error Loading Folders</h3>
-            <p>${escapeHtml(message)}</p>
-            <button class="btn btn-primary" onclick="loadFolders()">
-                <span class="btn-icon">🔄</span>
-                <span class="btn-text">Try Again</span>
-            </button>
-        </div>
-    `;
 }
 
 // ============================================================================
@@ -345,44 +302,6 @@ function setupKeyboardShortcuts() {
 }
 
 // ============================================================================
-// NOTIFICATIONS & MODALS
-// ============================================================================
-
-// function showNotification(message, type = 'info') {
-//     // Remove existing notifications
-//     const existingNotifications = document.querySelectorAll('.notification');
-//     existingNotifications.forEach(n => n.remove());
-    
-//     // Create notification element
-//     const notification = document.createElement('div');
-//     notification.className = `notification ${type}`;
-//     notification.innerHTML = `
-//         <div class="notification-content">
-//             <span class="notification-message">${escapeHtml(message)}</span>
-//             <button class="notification-close" onclick="this.parentElement.parentElement.remove()">×</button>
-//         </div>
-//     `;
-    
-//     // Add to page
-//     document.body.appendChild(notification);
-    
-//     // Auto-remove after 5 seconds
-//     setTimeout(() => {
-//         if (notification.parentElement) {
-//             notification.remove();
-//         }
-//     }, 5000);
-    
-//     // Animate in
-//     setTimeout(() => notification.classList.add('show'), 10);
-// }
-
-
-// function showFolderInfo(folderName) {
-//     openFolder(folderName);
-// }
-
-// ============================================================================
 // UTILITY FUNCTIONS
 // ============================================================================
 
@@ -430,5 +349,6 @@ function debounce(func, wait) {
 window.createFolder = createFolder;
 window.loadFolders = loadFolders;
 window.deleteFolder = deleteFolder;
-// window.openFolder = openFolder;
-window.showFolderInfo = showFolderInfo;
+window.openFolder = openFolder;
+
+
