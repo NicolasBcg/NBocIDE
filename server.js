@@ -5,15 +5,14 @@ const path = require('path');
 const fs = require('fs').promises;
 
 // Import route modules
-const folderRoutes = require('./routes/folders');
-const healthRoutes = require('./routes/health');
-const projectRoutes = require('./routes/project');
+const folderRoutes = require('./routes/file_system_endpoints');
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Workspace path (relative to server directory)
-const WORKSPACE_PATH = path.join(__dirname, '..', 'Workspace');
+const WORKSPACE_PATH = path.join(__dirname, 'Workspace');
 
 // Middleware
 app.use(cors());
@@ -44,8 +43,7 @@ async function initializeWorkspace() {
 
 // API Routes
 app.use('/api/folders', folderRoutes);
-app.use('/api/health', healthRoutes);
-app.use('/api/project', projectRoutes);
+
 
 // Default route - serve main frontend
 app.get('/', (req, res) => {

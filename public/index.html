@@ -3,74 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Python IDE - Step 1</title>
+    <title>BocIDE</title>
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐍</text></svg>">
 </head>
 <body>
     <div class="container">
-        <!-- Header Section -->
-        <header class="header">
-            <h1>🐍 Python IDE</h1>
-            <p class="subtitle">Projects :</p>
+        <header>
+            <h1>Welcome to BocIDE</h1>
         </header>
         
-        <!-- Status Bar -->
-        <div id="statusBar" class="status-bar">
-            <span class="loading"></span>
-            Connecting to server...
-        </div>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Create Folder Section -->
-            <section class="create-folder-section">
-                <h2>Create New Python project Project Folder</h2>
-                <form class="folder-form" onsubmit="createFolder(event)">
-                    <div class="form-group">
-                        <label for="folderName">Folder Name:</label>
-                        <div class="input-group">
-                            <input 
-                                type="text" 
-                                id="folderName" 
-                                name="folderName"
-                                placeholder="Enter project name (e.g., my-python-project)"
-                                maxlength="50"
-                                required
-                                autocomplete="off"
-                            >
-                            <button type="submit" id="createBtn" class="btn btn-primary">
-                                <span class="btn-text">Create Python Project</span>
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </section>
-
-            <!-- Folders Display Section -->
-            <section class="folders-section">
-                <div class="section-header">
-                    <h2>Project Folders</h2>
-                    <div class="section-actions">
-                        <button class="btn btn-secondary" onclick="loadFolders()" title="Refresh folder list">
-                            <span class="btn-icon">🔄</span>
-                            <span class="btn-text">Refresh</span>
-                        </button>
-                    </div>
+        <main>
+            <div class="projects-section">
+                <div class="projects-header">
+                    <h2>Projects</h2>
+                    <button id="new-project-btn" class="btn btn-primary">New Project</button>
                 </div>
                 
-                <div id="foldersContainer" class="folders-grid">
-                    <div class="empty-state">
-                        <span class="loading"></span>
-                        Loading folders...
-                    </div>
+                <div id="projects-container" class="projects-container">
+                    <div class="loading">Loading projects...</div>
                 </div>
-            </section>
+            </div>
         </main>
-
     </div>
 
-    <!-- Scripts -->
+    <!-- Modal for creating new project -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal">
+            <h3>Create New Project</h3>
+            <input type="text" id="project-name-input" placeholder="Enter project name" maxlength="20">
+            <div class="modal-buttons">
+                <button id="cancel-btn" class="btn btn-secondary">Cancel</button>
+                <button id="create-btn" class="btn btn-primary">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for delete confirmation -->
+    <div id="delete-modal-overlay" class="modal-overlay">
+        <div class="modal">
+            <h3>Delete Project</h3>
+            <p>Are you sure you want to delete "<span id="delete-project-name"></span>"?</p>
+            <p class="warning">This action cannot be undone.</p>
+            <div class="modal-buttons">
+                <button id="delete-cancel-btn" class="btn btn-secondary">Cancel</button>
+                <button id="delete-confirm-btn" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+
     <script src="js/app.js"></script>
 </body>
 </html>

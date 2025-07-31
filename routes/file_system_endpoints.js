@@ -83,6 +83,37 @@ router.post('/create-folder', async (req, res) => {
   }
 });
 
+// Delete a folder at a given path
+router.delete('/delete-folder', async (req, res) => {
+  const { folder_path } = req.body;
+
+  if (!folder_path || typeof folder_path !== 'string') {
+    return res.status(400).json({ success: false, error: 'Invalid or missing folder_path.' });
+  }
+
+  const absolutePath = path.join(getWorkspacePath(req), folder_path);
+
+  try {
+    // Optional: Make sure the folder exists
+    const stat = await fs.stat(absolutePath);
+    if (!stat.isDirectory()) {
+      return res.status(400).json({ success: false, error: 'Specified path is not a folder.' });
+    }
+
+    // Delete folder and its contents
+    await fs.rm(absolutePath, { recursive: true, force: true });
+
+    res.status(200).json({ success: true, message: `Folder '${folder_path}' deleted successfully.` });
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      return res.status(404).json({ success: false, error: 'Folder not found.' });
+    }
+
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+
 // Create a file in a given path
 router.post('/create-file', async (req, res) => {
   const { folder_path, name } = req.body;
